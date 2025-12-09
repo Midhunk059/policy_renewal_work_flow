@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIAW Motor Renewal Process</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6b7280;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #3b82f6;
+        }
+        
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .flowchart {
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        .flow-node {
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 400px;
+            text-align: center;
+            font-size: 14px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .start-node {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .process-node {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+        
+        .decision-node {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            padding: 24px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-node {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        .end-node {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .special-node {
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+            color: white;
+        }
+        
+        .arrow {
+            text-align: center;
+            margin: 5px 0;
+            color: #6b7280;
+            font-size: 24px;
+        }
+        
+        .branch-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .branch {
+            flex: 1;
+            max-width: 350px;
+        }
+        
+        .label {
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+        
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #1e40af;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-box {
+            width: 40px;
+            height: 30px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 AIAW Motor Renewal Process</h1>
+            <p>Complete workflow for processing motor insurance policy renewals</p>
+        </div>
+        
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('overview')">Overview Flow</button>
+                <button class="tab" onclick="showTab('detailed')">Detailed Logic</button>
+                <button class="tab" onclick="showTab('rules')">Business Rules</button>
+            </div>
+            
+            <!-- Overview Flow -->
+            <div id="overview" class="tab-content active">
+                <div class="flowchart">
+                    <div class="flow-node start-node">START: User Uploads Excel File</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">API Validates File Format</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Store File to S3</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Create Queue Job</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node action-node">Return Upload ID to User</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Queue Worker Picks Job</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Parse Excel & Validate Data</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node special-node">Filter Policies Due in 45 Days</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node decision-node">Process Each Policy</div>
+                    <div class="arrow">↓</div>
+                    
+                    <div class="branch-container">
+                        <div class="branch">
+                            <div class="label">← No Claims</div>
+                            <div class="flow-node action-node">Apply Discount<br>(10-20%)</div>
+                        </div>
+                        <div class="branch">
+                            <div class="label">Non-Fault Claims →</div>
+                            <div class="flow-node action-node">Apply Discount<br>(10-15%)</div>
+                        </div>
+                        <div class="branch">
+                            <div class="label">Faulty Claims →</div>
+                            <div class="flow-node action-node">Apply Loading<br>(0-30%)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Calculate Premium with Depreciation</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Apply Vehicle-Specific Rules (Bus/Private)</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Store Renewal Quote to Database</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node end-node">END: Results Available via API</div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Key Points:</h3>
+                    <ul>
+                        <li>Renewal notices generated 45 days before expiry</li>
+                        <li>Automatic discount/loading based on claims history</li>
+                        <li>Vehicle depreciation applied annually</li>
+                        <li>Special rules for buses vs private vehicles</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Detailed Logic -->
+            <div id="detailed" class="tab-content">
+                <div class="flowchart">
+                    <div class="flow-node start-node">Policy Renewal Processing</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node decision-node">Has Claims?</div>
+                    
+                    <div class="branch-container">
+                        <!-- No Claims Branch -->
+                        <div class="branch">
+                            <div class="label">← NO</div>
+                            <div class="flow-node decision-node">Claims-Free<br>Period?</div>
+                            <div class="arrow">↓</div>
+                            
+                            <div class="flow-node action-node">2 Years:<br>15% discount (Rate)<br>20% discount (Min Premium)</div>
+                            <div class="arrow">↓</div>
+                            <div class="flow-node action-node">1 Year:<br>10% discount (Rate)<br>10% discount (Min Premium)</div>
+                        </div>
+                        
+                        <!-- Has Claims Branch -->
+                        <div class="branch">
+                            <div class="label">YES →</div>
+                            <div class="flow-node decision-node">Claim Type?</div>
+                            <div class="arrow">↓</div>
+                            
+                            <div class="flow-node special-node">Non-Fault Only<br>(0% responsibility)</div>
+                            <div class="arrow">↓</div>
+                            <div class="flow-node action-node">Apply 10% Discount<br>Compare with Last Year</div>
+                            
+                            <div class="arrow" style="margin-top: 20px;">↓</div>
+                            
+                            <div class="flow-node special-node">Faulty Claims<br>(50% or 100% responsibility)</div>
+                            <div class="arrow">↓</div>
+                            <div class="flow-node decision-node">Claim Amount<br>vs Premium?</div>
+                            <div class="arrow">↓</div>
+                            
+                            <div class="flow-node action-node">≤50%: No loading</div>
+                            <div class="flow-node action-node">51-100%: Load 10%</div>
+                            <div class="flow-node action-node">101-200%: Load 20%</div>
+                            <div class="flow-node action-node">>200%: Load 30% or Refer</div>
+                            <div class="flow-node special-node">>300%: Refer to HOD</div>
+                            <div class="flow-node special-node">2+ OD Claims: TPL Only</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Apply Vehicle Depreciation<br>(20% Y1, 15% Y2, 10% Y3+)</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node decision-node">Vehicle Type?</div>
+                    
+                    <div class="branch-container">
+                        <div class="branch">
+                            <div class="label">← Bus</div>
+                            <div class="flow-node action-node">Apply to Net Rate<br>or Basic Rate</div>
+                        </div>
+                        <div class="branch">
+                            <div class="label">Private/Other →</div>
+                            <div class="flow-node action-node">Apply Standard<br>Calculation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    <div class="flow-node process-node">Calculate Final Premium</div>
+                    <div class="arrow">↓</div>
+                    <div class="flow-node end-node">Generate Renewal Quote</div>
+                </div>
+            </div>
+            
+            <!-- Business Rules -->
+            <div id="rules" class="tab-content">
+                <div class="info-box">
+                    <h3>📋 Discount Rules - No Claims</h3>
+                    <ul>
+                        <li><strong>2 Years Claims-Free (Under Rate):</strong> 15% discount on gross rate</li>
+                        <li><strong>2 Years Claims-Free (Under Min Premium):</strong> 20% discount on min premium</li>
+                        <li><strong>1 Year Claims-Free (Under Rate):</strong> 10% discount on gross rate</li>
+                        <li><strong>1 Year Claims-Free (Under Min Premium):</strong> 10% discount on min premium</li>
+                        <li>Always compare with last year's rate/premium and use the lower value</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>⚠️ Loading Rules - Faulty Claims</h3>
+                    <ul>
+                        <li><strong>Claim ≤ 50% of premium:</strong> No loading (current rate + depreciation)</li>
+                        <li><strong>Claim 51-100% of premium:</strong> 10% loading</li>
+                        <li><strong>Claim 101-200% of premium:</strong> 20% loading</li>
+                        <li><strong>Claim >200% or >1 claim:</strong> 30% loading or refer to Senior UW</li>
+                        <li><strong>Claim >300% or >2 claims:</strong> Refer to HOD (mandatory)</li>
+                        <li><strong>2+ Own Damage claims:</strong> Offer TPL coverage only</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>📉 Depreciation Schedule</h3>
+                    <ul>
+                        <li><strong>1st Year:</strong> 20% depreciation</li>
+                        <li><strong>2nd Year:</strong> 15% depreciation</li>
+                        <li><strong>3rd Year onwards:</strong> 10% depreciation per year</li>
+                        <li>Age calculated from manufacture year, not registration date</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>🚌 Special Bus Rules</h3>
+                    <ul>
+                        <li>Discounts applied to <strong>net rate</strong> (not total premium)</li>
+                        <li>Loadings applied to <strong>basic rate</strong> (excluding additional benefits)</li>
+                        <li>Dealer repair: Only 1st year (vs 3 years for private vehicles)</li>
+                        <li>2nd year onwards dealer repair: Refer to HOD</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>🔧 Dealer Repair Rules</h3>
+                    <ul>
+                        <li><strong>Private (Years 1-3, no claims):</strong> Auto-approved</li>
+                        <li><strong>Private (Year 4 or with claims):</strong> Refer to Senior UW</li>
+                        <li><strong>Private (Year 5+ or with claims):</strong> Refer to HOD</li>
+                        <li><strong>Bus (Year 1, no claims):</strong> Auto-approved</li>
+                        <li><strong>Bus (Year 2+ or with claims):</strong> Refer to HOD</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></div>
+                    <span>Start/End</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);"></div>
+                    <span>Process</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"></div>
+                    <span>Decision</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);"></div>
+                    <span>Action</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);"></div>
+                    <span>Special Rule</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
